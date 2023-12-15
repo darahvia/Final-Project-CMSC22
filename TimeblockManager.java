@@ -18,7 +18,7 @@ import java.util.*;
 
         allEntries.put(startMinutes, entryName);
         for (int i = startMinutes + 1; i < endMinutes; i++) {
-            allEntries.put(i, entryName); // Mark the time slots between start and end as occupied
+            allEntries.put(i, entryName);               // mark the time slots between start and end as occupied
         }
         allEntries.put(endMinutes, null);
     }

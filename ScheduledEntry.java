@@ -1,11 +1,13 @@
 import java.time.LocalTime;
 
-public class ScheduledEntry implements Entry {
+public class ScheduledEntry extends CalendarEntry {
     private String name;
     private LocalTime startTime;
     private LocalTime endTime;
 
+
     public ScheduledEntry(String name, LocalTime startTime, LocalTime endTime) {
+        super(name);
         this.name = name;
         this.startTime = startTime;
         this.endTime = endTime;
@@ -17,18 +19,11 @@ public class ScheduledEntry implements Entry {
     }
 
     @Override
-    public String toString() {
-        return "ScheduledEntry{" +
-                "name='" + name + '\'' +
-                ", day='" + startTime + '\'' +
-                ", time='" + endTime + '\'' +
-                '}';
-    }
-
     public LocalTime getStartTime() {
         return startTime;
     }
 
+    @Override
     public LocalTime getEndTime() {
         return endTime;
     }

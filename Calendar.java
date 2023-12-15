@@ -29,13 +29,8 @@ public class Calendar {
             try {
                 LocalTime startTime = LocalTime.parse(startTimeStr);
                 LocalTime endTime = LocalTime.parse(endTimeStr);
-
-                timeblockManager.addTimeBlock(startTime, endTime, taskName);
             
-                int startMinutes = startTime.getHour() * 4 + startTime.getMinute();
-                int endMinutes = endTime.getHour() * 4 + endTime.getMinute();                   // try catch for every input - dale
-
-                entryManager.addScheduledEntry(startMinutes, new ScheduledEntry(taskName, startTime, endTime), endMinutes);
+                entryManager.addScheduledEntry(startTime, endTime, taskName);
 ;
             } catch (DateTimeParseException e) {
                 System.out.println(e);
@@ -78,15 +73,14 @@ public class Calendar {
         }
 
         UnscheduledEntryStrategy unscheduledEntryStrategy = new UnscheduledEntryStrategy();
-        unscheduledEntryStrategy.scheduleUnscheduledEntries(entryManager.getUnscheduledEntriesQueue(), timeblockManager, entryManager.getAllEntries());
+        unscheduledEntryStrategy.scheduleUnscheduledEntries(entryManager.getUnscheduledEntriesQueue(), entryManager, timeblockManager);
 
 
         displayAllEntries(entryManager.getAllEntries());
 
-        // timeblockManager.displayOccupiedTimeslots();
     }
 
-    private static void displayAllEntries(TreeMap<Integer, Entry> allEntries) {
+    private static void displayAllEntries(TreeMap<Integer, CalendarEntry> allEntries) {
         System.out.println("\nAll Entries:");
     
         for (int i = 0; i < TimeblockManager.MAX_TIME_SLOTS; i++) {
@@ -95,7 +89,7 @@ public class Calendar {
     
             String timeBlock = String.format("%02d:%02d", hour, minute);
     
-            Map.Entry<Integer, Entry> floorEntry = allEntries.floorEntry(i);
+            Map.Entry<Integer, CalendarEntry> floorEntry = allEntries.floorEntry(i);
             String taskName = (floorEntry != null && floorEntry.getValue() != null) ? floorEntry.getValue().getName() : "N/A";
             String status = (floorEntry != null && floorEntry.getValue() != null) ? "Occupied" : "Available";
     

@@ -1,16 +1,14 @@
-//import java.util.ArrayDeque;
-//import java.util.ArrayList;
-//import java.util.List;
-//import java.util.Queue;
 
-class UnscheduledEntry implements Entry {
-    protected String name;
-    protected String dueTime;
-    protected int units;
-    protected int unitsPerTimeslot;
-    protected int unitsRemaining;
+import java.time.LocalTime;
+class UnscheduledEntry extends CalendarEntry {
+    private String name;
+    private String dueTime;
+    private int units;
+    private int unitsPerTimeslot;
+    private int unitsRemaining;
 
     public UnscheduledEntry(String name, String dueTime, int units, int unitsPerTimeslot) {
+        super(name);
         this.name = name;
         this.dueTime = dueTime;
         this.units = units;
@@ -25,12 +23,12 @@ class UnscheduledEntry implements Entry {
 
 
     @Override
-    public String toString() {
-        return "UnscheduledEntry{" +
-                "name='" + name + '\'' +
-                ", dueTime ='" + dueTime + '\'' +
-                ", units=" + units +
-                '}';
+    public LocalTime getStartTime() {
+        return null;
+    }
+
+    public LocalTime getEndTime() {
+        return null;
     }
 
     public String getDueTime() {
@@ -52,4 +50,6 @@ class UnscheduledEntry implements Entry {
     public int getUnitsRemaining(){
         return unitsRemaining;
     }
+
+    
 }

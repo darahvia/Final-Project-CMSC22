@@ -1,11 +1,11 @@
 import java.util.Queue;
-import java.sql.Time;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.TreeMap;
 
 public class EntryManager{
-    private TreeMap<Integer, Entry> allEntries;
+    private TreeMap<Integer, CalendarEntry> allEntries;
     private Queue<UnscheduledEntry> unscheduledEntriesQueue;
     TimeblockManager timeblockManager = new TimeblockManager();
 
@@ -14,7 +14,7 @@ public class EntryManager{
         this.unscheduledEntriesQueue = new LinkedList<>();
     }
 
-    public TreeMap<Integer, Entry> getAllEntries(){
+    public TreeMap<Integer, CalendarEntry> getAllEntries(){
         return allEntries;
     }
 
@@ -22,13 +22,23 @@ public class EntryManager{
         return unscheduledEntriesQueue;
     }
 
-    public void addScheduledEntry(int startMinutes, ScheduledEntry scheduledEntry, int endMinutes) { 
-        allEntries.put(startMinutes, scheduledEntry);
+    public void addScheduledEntry(LocalTime startTime, LocalTime endTime, String taskName) { 
+        int startMinutes = calculateMinutes(startTime);
+        int endMinutes = calculateMinutes(endTime);
+
+        allEntries.put(startMinutes, new ScheduledEntry(taskName, startTime, endTime));
         allEntries.put(endMinutes, null);
 
         ArrayList<Integer> timeslotsToUpdate = new ArrayList<>();
         for (int i = startMinutes; i <= endMinutes; i++) {
             timeslotsToUpdate.add(i);
         }
+
+        timeblockManager.updateTimeslots(timeslotsToUpdate);
+    }
+
+
+    public int calculateMinutes (LocalTime time) {
+        return time.getHour() * 4 + time.getMinute();
     }
 }

@@ -2,14 +2,10 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Queue;
-import java.util.TreeMap;
 import java.util.Iterator;
 
 public class UnscheduledEntryStrategy {
-    public void scheduleUnscheduledEntries(Queue<UnscheduledEntry> unscheduledEntriesQueue,
-                                                  TimeblockManager timeblockManager,
-                                                  TreeMap<Integer, Entry> allEntries) {
-
+    public void scheduleUnscheduledEntries(Queue<UnscheduledEntry> unscheduledEntriesQueue, EntryManager entryManager, TimeblockManager timeblockManager) {
 
         ArrayList<Integer> timeslotsToUpdate = new ArrayList<>();
         Iterator<UnscheduledEntry> iterator = unscheduledEntriesQueue.iterator();
@@ -25,22 +21,17 @@ public class UnscheduledEntryStrategy {
             int unitsPerTimeslot = unscheduledEntry.getUnitsPerTimeslot();
             List<Integer> availableSlots = timeblockManager.getAvailableSlots();
 
-            int timeslot = availableSlots.get(0);
-            LocalTime startTime = calculateTime(timeslot);
-            LocalTime endTime = calculateTime(timeslot + unitsPerTimeslot * 4);
+            if (!availableSlots.isEmpty()){
+                int timeslot = availableSlots.get(0);
+                LocalTime startTime = calculateTime(timeslot);
+                LocalTime endTime = calculateTime(timeslot + unitsPerTimeslot * 4);
 
-            for (int i = timeslot; i < timeslot + unitsPerTimeslot * 4; i++) {
-                timeslotsToUpdate.add(i);
+                for (int i = timeslot; i < timeslot + unitsPerTimeslot * 4; i++) {
+                 timeslotsToUpdate.add(i);
+                }
+                
+                entryManager.addScheduledEntry(startTime, endTime, unscheduledEntry.getName());
             }
-
-            timeblockManager.addTimeBlock(startTime, endTime, unscheduledEntry.getName());
-            timeblockManager.updateTimeslots(timeslotsToUpdate);
-
-            int startMinutes = startTime.getHour() * 4 + startTime.getMinute();
-            int endMinutes = endTime.getHour() * 4 + endTime.getMinute();
-
-            allEntries.put(startMinutes, new ScheduledEntry(unscheduledEntry.getName(), startTime, endTime));
-            allEntries.put(endMinutes, null);
             }
         }
 
