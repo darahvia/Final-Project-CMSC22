@@ -22,8 +22,6 @@ public class UnscheduledEntryStrategy {
 
                 int startSlot = calculateMinutes(startTime);
                 int endSlot = calculateMinutes(endTime);
-                System.out.println(startSlot);
-                System.out.println(endSlot);
 
                 // to update the occupied timeslots
                 ArrayList<Integer> timeslotsToUpdate = new ArrayList<>();
@@ -31,6 +29,7 @@ public class UnscheduledEntryStrategy {
                     timeslotsToUpdate.add(i % timeblockManager.getTotalSlots());
                 }
                 timeblockManager.updateTimeslots(timeslotsToUpdate);
+
                 entryManager.addScheduledEntry(startTime, endTime, unscheduledEntry.getName());
                 unscheduledEntriesQueue.poll();
                 
@@ -41,22 +40,20 @@ public class UnscheduledEntryStrategy {
 
                 int startSlot = calculateMinutes(startTime);
                 int endSlot = calculateMinutes(endTime);
-                System.out.println(startSlot);
-                System.out.println(endSlot);
-
+                
+                
                 // to update the occupied timeslots
                 ArrayList<Integer> timeslotsToUpdate = new ArrayList<>();
                 for (int i = startSlot; i <= endSlot; i++) {
                     timeslotsToUpdate.add(i % timeblockManager.getTotalSlots());
                 }
                 timeblockManager.updateTimeslots(timeslotsToUpdate);
-                System.out.println(timeblockManager.getAvailableSlots());
 
 
                 entryManager.addScheduledEntry(startTime, endTime, unscheduledEntry.getName());
                 unscheduledEntry.decreaseUnits(unitsPerTimeslot);
 
-                if (unscheduledEntry.getUnitsRemaining() > 0) { 
+                if (unscheduledEntry.getUnitsRemaining() > 0) {             // requeue
                     entryManager.getUnscheduledEntriesQueue().add(unscheduledEntry);
                 }
             }
