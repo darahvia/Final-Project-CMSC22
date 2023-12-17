@@ -13,14 +13,28 @@ public class UnscheduledEntryStrategy {
             UnscheduledEntry unscheduledEntry = unscheduledEntriesQueue.peek();
             int units = unscheduledEntry.getUnits();
 
-            if (unscheduledEntry.getUnitsRemaining() == 0){
-                unscheduledEntriesQueue.poll();
-                continue;
-            }
-
             int unitsPerTimeslot = unscheduledEntry.getUnitsPerTimeslot();
 
-            for (int i = 0; i < unscheduledEntry.getUnitsRemaining(); i++){
+            if (unitsPerTimeslot >= unscheduledEntry.getUnitsRemaining()){          // last iteration
+                int timeslot = availableSlots.get(0);
+                LocalTime startTime = calculateTime(timeslot);
+                LocalTime endTime = calculateTime(timeslot + unscheduledEntry.getUnitsRemaining() * 4);     //duration
+
+                int startSlot = calculateMinutes(startTime);
+                int endSlot = calculateMinutes(endTime);
+                System.out.println(startSlot);
+                System.out.println(endSlot);
+
+                // to update the occupied timeslots
+                ArrayList<Integer> timeslotsToUpdate = new ArrayList<>();
+                for (int i = startSlot; i <= endSlot; i++) {
+                    timeslotsToUpdate.add(i % timeblockManager.getTotalSlots());
+                }
+                timeblockManager.updateTimeslots(timeslotsToUpdate);
+                entryManager.addScheduledEntry(startTime, endTime, unscheduledEntry.getName());
+                unscheduledEntriesQueue.poll();
+                
+            } else {
                 int timeslot = availableSlots.get(0);
                 LocalTime startTime = calculateTime(timeslot);
                 LocalTime endTime = calculateTime(timeslot + unitsPerTimeslot * 4);     //duration
@@ -32,7 +46,7 @@ public class UnscheduledEntryStrategy {
 
                 // to update the occupied timeslots
                 ArrayList<Integer> timeslotsToUpdate = new ArrayList<>();
-                for (int j = startSlot; j <= endSlot; i++) {
+                for (int i = startSlot; i <= endSlot; i++) {
                     timeslotsToUpdate.add(i % timeblockManager.getTotalSlots());
                 }
                 timeblockManager.updateTimeslots(timeslotsToUpdate);
@@ -46,8 +60,9 @@ public class UnscheduledEntryStrategy {
                     entryManager.getUnscheduledEntriesQueue().add(unscheduledEntry);
                 }
             }
-        }
+
             }
+        }
     
         private static LocalTime calculateTime(int timeslot) {
             int hour = timeslot / 4;

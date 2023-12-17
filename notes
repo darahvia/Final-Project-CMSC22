@@ -14,7 +14,7 @@ T1  T2  T3  T1  T2  T1  DONE
 
 Check Queue
 Compare Unit Remaining wiht quantum
-    if Q >= units
+    if Q >= unitsremaining
         schedule and deque
     else
         schedule for Q hours
