@@ -62,17 +62,18 @@ public class Calendar {
                 try {
                     System.out.print("Enter units: ");
                     units = scanner.nextInt();
-                    scanner.nextLine();
                     System.out.print("Enter units per timeslot: ");
                     unitsPerTimeslot = scanner.nextInt();
                     scanner.nextLine();
                 } catch (InputMismatchException e) {
+                    scanner.nextLine();
                     System.out.println("Error: Invalid input");
                 }
 
                 LocalTime duetime = LocalTime.parse(dueTime);
                 entryManager.getUnscheduledEntriesQueue().add(new UnscheduledEntry(taskName, dueTime, units, unitsPerTimeslot));
             } catch (DateTimeParseException e) {
+                scanner.nextLine();
                 System.out.println("Error: Invalid input");
             }
         }
