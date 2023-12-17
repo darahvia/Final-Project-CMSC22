@@ -8,7 +8,7 @@ import java.util.InputMismatchException;
 public class Calendar {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
-        TimeblockManager timeblockManager = new TimeblockManager();
+        TimeblockManager timeblockManager = TimeblockManager.getInstance();     //singleton because it will be used for the unscheduled
         EntryManager entryManager = new EntryManager();
 
         // scheduled entries
@@ -76,6 +76,7 @@ public class Calendar {
 
                 LocalTime duetime = LocalTime.parse(dueTime);
                 entryManager.getUnscheduledEntriesQueue().add(new UnscheduledEntry(taskName, dueTime, units, unitsPerTimeslot));
+
             } catch (DateTimeParseException e) {
                 scanner.nextLine();
                 System.out.println("Error: Invalid input");

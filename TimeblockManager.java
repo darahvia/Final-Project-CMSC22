@@ -2,6 +2,7 @@ import java.time.LocalTime;
 import java.util.*;
 
  class TimeblockManager {
+    private static TimeblockManager instance = null;
     private TreeMap<Integer, String> allEntries;
 
     public TimeblockManager() {
@@ -11,7 +12,12 @@ import java.util.*;
     final static int MAX_TIME_SLOTS = 24 * 4; 
     boolean[] occupiedTimeslots = new boolean[MAX_TIME_SLOTS];;
 
-
+    public static TimeblockManager getInstance() {
+        if (instance == null){
+            instance = new TimeblockManager();
+        }
+        return instance;
+    }
     public void addTimeBlock(LocalTime startTime, LocalTime endTime, String entryName) {
         int startMinutes = startTime.getHour() * 4 + startTime.getMinute();
         int endMinutes = endTime.getHour() * 4 + endTime.getMinute();
@@ -43,6 +49,9 @@ import java.util.*;
         return availableSlots;
     }
 
+    public int getTotalSlots(){
+        return MAX_TIME_SLOTS;
+    }
 
     public void displayOccupiedTimeslots() {
         System.out.println("Occupied Time Slots:");

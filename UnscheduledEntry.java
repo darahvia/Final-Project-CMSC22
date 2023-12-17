@@ -43,7 +43,7 @@ class UnscheduledEntry extends CalendarEntry {
         return unitsPerTimeslot;
     }
 
-    public void setUnitsRemaining(int subtractUnits){
+    public void decreaseUnits(int subtractUnits){
         this.unitsRemaining -= subtractUnits;
     }
     

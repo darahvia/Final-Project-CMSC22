@@ -2,12 +2,13 @@ import java.util.Queue;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.TreeMap;
 
 public class EntryManager{
     private TreeMap<Integer, CalendarEntry> allEntries;
     private Queue<UnscheduledEntry> unscheduledEntriesQueue;
-    TimeblockManager timeblockManager = new TimeblockManager();
+    TimeblockManager timeblockManager = TimeblockManager.getInstance();
 
     public EntryManager(){
         this.allEntries = new TreeMap<>();
@@ -23,22 +24,25 @@ public class EntryManager{
     }
 
     public void addScheduledEntry(LocalTime startTime, LocalTime endTime, String taskName) { 
-        int startMinutes = calculateMinutes(startTime);
-        int endMinutes = calculateMinutes(endTime);
+        int startSlot = calculateMinutes(startTime);
+        int endSlot = calculateMinutes(endTime);
 
-        allEntries.put(startMinutes, new ScheduledEntry(taskName, startTime, endTime));
-        allEntries.put(endMinutes, null);
+
+        allEntries.put(startSlot, new ScheduledEntry(taskName, startTime, endTime));
+        allEntries.put(endSlot, null);
 
         ArrayList<Integer> timeslotsToUpdate = new ArrayList<>();
-        for (int i = startMinutes; i <= endMinutes; i++) {
+        for (int i = startSlot; i <= endSlot; i++) {
             timeslotsToUpdate.add(i);
         }
 
         timeblockManager.updateTimeslots(timeslotsToUpdate);
+
+
     }
 
 
     public int calculateMinutes (LocalTime time) {
-        return time.getHour() * 4 + time.getMinute();
+        return time.getHour() * 4 + time.getMinute() / 15;  //returns the numeric value of the timeslot within 0 to 95
     }
 }
