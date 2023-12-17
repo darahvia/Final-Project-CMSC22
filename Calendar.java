@@ -29,11 +29,15 @@ public class Calendar {
             try {
                 LocalTime startTime = LocalTime.parse(startTimeStr);
                 LocalTime endTime = LocalTime.parse(endTimeStr);
-            
+
+                if (startTime.isAfter(endTime)) {
+                    System.out.println("Error: Invalid start/end time");
+                    continue;
+                }
+
                 entryManager.addScheduledEntry(startTime, endTime, taskName);
-;
             } catch (DateTimeParseException e) {
-                System.out.println(e);
+                System.out.println("Error: Invalid start/end time");
             }
         }
 
@@ -63,12 +67,13 @@ public class Calendar {
                     unitsPerTimeslot = scanner.nextInt();
                     scanner.nextLine();
                 } catch (InputMismatchException e) {
-                    System.out.println(e);
+                    System.out.println("Error: Invalid input");
                 }
+
                 LocalTime duetime = LocalTime.parse(dueTime);
                 entryManager.getUnscheduledEntriesQueue().add(new UnscheduledEntry(taskName, dueTime, units, unitsPerTimeslot));
             } catch (DateTimeParseException e) {
-                System.out.println(e);
+                System.out.println("Error: Invalid input");
             }
         }
 
