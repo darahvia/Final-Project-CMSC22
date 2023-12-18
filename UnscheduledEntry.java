@@ -2,12 +2,12 @@
 import java.time.LocalTime;
 class UnscheduledEntry extends CalendarEntry {
     private String name;
-    private String dueTime;
+    private LocalTime dueTime;
     private int units;
     private int unitsPerTimeslot;
     private int unitsRemaining;
 
-    public UnscheduledEntry(String name, String dueTime, int units, int unitsPerTimeslot) {
+    public UnscheduledEntry(String name, LocalTime dueTime, int units, int unitsPerTimeslot) {
         super(name);
         this.name = name;
         this.dueTime = dueTime;
@@ -31,7 +31,7 @@ class UnscheduledEntry extends CalendarEntry {
         return null;
     }
 
-    public String getDueTime() {
+    public LocalTime getDueTime() {
         return dueTime;
     }
 

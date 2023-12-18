@@ -62,8 +62,8 @@ public class Calendar {
             
             try {       // checks for valid due time
                 System.out.print("Enter due time (HH:mm): ");
-                String dueTime = scanner.nextLine();
-                LocalTime duetime = LocalTime.parse(dueTime);
+                String dueTimeStr = scanner.nextLine();
+                LocalTime dueTime = LocalTime.parse(dueTimeStr);
 
                 int units = 0;
                 int unitsPerTimeslot = 0;
