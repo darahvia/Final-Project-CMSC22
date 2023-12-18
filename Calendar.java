@@ -55,40 +55,38 @@ public class Calendar {
             try {
                 System.out.print("Enter due time (HH:mm): ");
                 String dueTime = scanner.nextLine();
+                LocalTime duetime = LocalTime.parse(dueTime);
 
                 int units = 0;
                 int unitsPerTimeslot = 0;
 
-                do {
-                    try {
-                        System.out.print("Enter units: ");
-                        units = scanner.nextInt();
-                        System.out.print("Enter units per timeslot: ");
-                        unitsPerTimeslot = scanner.nextInt();
-                        scanner.nextLine();
-                    } catch (InputMismatchException e) {
-                        scanner.nextLine();
-                        System.out.println("Error: Invalid input");
+                try {
+                    System.out.print("Enter units: ");
+                    units = scanner.nextInt();
+                    System.out.print("Enter units per timeslot: ");
+                    unitsPerTimeslot = scanner.nextInt();
+                    scanner.nextLine();
+                    if (timeblockManager.getAvailableSlots().size() < units) {
+                        System.out.println("Error: Available timeslots not enough");
                         continue;
                     }
+                } catch (InputMismatchException e) {
+                    scanner.nextLine();
+                    System.out.println("Error: Invalid units");
+                    continue;
                 }
-                while(timeblockManager.getAvailableSlots().size() < units);
-
-                LocalTime duetime = LocalTime.parse(dueTime);
+                
                 entryManager.getUnscheduledEntriesQueue().add(new UnscheduledEntry(taskName, dueTime, units, unitsPerTimeslot));
-
             } catch (DateTimeParseException e) {
-                scanner.nextLine();
-                System.out.println("Error: Invalid input");
+                System.out.println("Error: Invalid due time");
             }
         }
 
         UnscheduledEntryStrategy unscheduledEntryStrategy = new UnscheduledEntryStrategy();
         unscheduledEntryStrategy.scheduleUnscheduledEntries(entryManager.getUnscheduledEntriesQueue(), entryManager, timeblockManager);
 
-
         displayAllEntries(entryManager.getAllEntries());
-
+        scanner.close();
     }
 
     private static void displayAllEntries(TreeMap<Integer, CalendarEntry> allEntries) {
@@ -104,8 +102,7 @@ public class Calendar {
             String taskName = (floorEntry != null && floorEntry.getValue() != null) ? floorEntry.getValue().getName() : "N/A";
             String status = (floorEntry != null && floorEntry.getValue() != null) ? "Occupied" : "Available";
     
-            System.out.println("Time Slot " + i + " (" + timeBlock + "): " +
-                    status + " - Task: " + taskName);
+            System.out.println("Time Slot " + i + " (" + timeBlock + "): " + status + " - Task: " + taskName);
         }
     }
 }

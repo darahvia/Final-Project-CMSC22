@@ -12,6 +12,5 @@ abstract class CalendarEntry {
     }
 
     public abstract LocalTime getStartTime();
-
     public abstract LocalTime getEndTime();
 }
