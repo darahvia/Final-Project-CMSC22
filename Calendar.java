@@ -26,12 +26,20 @@ public class Calendar {
             System.out.print("Enter end time (HH:mm): ");
             String endTimeStr = scanner.nextLine();
 
-            try {
+            try {     // checks for valid input for start and end time
                 LocalTime startTime = LocalTime.parse(startTimeStr);
                 LocalTime endTime = LocalTime.parse(endTimeStr);
 
-                if (startTime.isAfter(endTime)) {
+                if (startTime.isAfter(endTime)) {    // invalid input if start time is later than end time
                     System.out.println("Error: Invalid start/end time");
+                    continue;
+                }
+
+                int startSlot = entryManager.calculateMinutes(startTime);
+                int endSlot = entryManager.calculateMinutes(endTime);
+
+                if (timeblockManager.isTimeslotOccupied(startSlot) || timeblockManager.isTimeslotOccupied(endSlot)) {    // invalid input if timeslot is occupied
+                    System.out.println("Error: Timeslots are occupied");
                     continue;
                 }
 
@@ -52,7 +60,7 @@ public class Calendar {
                 break;
             }
             
-            try {
+            try {       // checks for valid due time
                 System.out.print("Enter due time (HH:mm): ");
                 String dueTime = scanner.nextLine();
                 LocalTime duetime = LocalTime.parse(dueTime);
@@ -60,13 +68,14 @@ public class Calendar {
                 int units = 0;
                 int unitsPerTimeslot = 0;
 
-                try {
+                try {     // checks for valid units and units per timeslot
                     System.out.print("Enter units: ");
                     units = scanner.nextInt();
                     System.out.print("Enter units per timeslot: ");
                     unitsPerTimeslot = scanner.nextInt();
                     scanner.nextLine();
-                    if (timeblockManager.getAvailableSlots().size() < units) {
+
+                    if (timeblockManager.getAvailableSlots().size() < units) {      // check if there are enough avaliable timeslots
                         System.out.println("Error: Available timeslots not enough");
                         continue;
                     }
@@ -75,9 +84,10 @@ public class Calendar {
                     System.out.println("Error: Invalid units");
                     continue;
                 }
-                
+
                 entryManager.getUnscheduledEntriesQueue().add(new UnscheduledEntry(taskName, dueTime, units, unitsPerTimeslot));
             } catch (DateTimeParseException e) {
+                scanner.nextLine();
                 System.out.println("Error: Invalid due time");
             }
         }
