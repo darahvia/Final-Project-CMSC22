@@ -26,12 +26,20 @@ public class Calendar {
             System.out.print("Enter end time (HH:mm): ");
             String endTimeStr = scanner.nextLine();
 
-            try {
+            try {     // checks for valid input for start and end time
                 LocalTime startTime = LocalTime.parse(startTimeStr);
                 LocalTime endTime = LocalTime.parse(endTimeStr);
 
-                if (startTime.isAfter(endTime)) {
+                if (startTime.isAfter(endTime)) {    // invalid input if start time is later than end time
                     System.out.println("Error: Invalid start/end time");
+                    continue;
+                }
+
+                int startSlot = entryManager.calculateMinutes(startTime);
+                int endSlot = entryManager.calculateMinutes(endTime);
+
+                if (timeblockManager.isTimeslotOccupied(startSlot) || timeblockManager.isTimeslotOccupied(endSlot)) {    // invalid input if timeslot is occupied
+                    System.out.println("Error: Timeslots are occupied");
                     continue;
                 }
 
@@ -52,43 +60,43 @@ public class Calendar {
                 break;
             }
             
-            try {
+            try {       // checks for valid due time
                 System.out.print("Enter due time (HH:mm): ");
                 String dueTime = scanner.nextLine();
+                LocalTime duetime = LocalTime.parse(dueTime);
 
                 int units = 0;
                 int unitsPerTimeslot = 0;
 
-                do {
-                    try {
-                        System.out.print("Enter units: ");
-                        units = scanner.nextInt();
-                        System.out.print("Enter units per timeslot: ");
-                        unitsPerTimeslot = scanner.nextInt();
-                        scanner.nextLine();
-                    } catch (InputMismatchException e) {
-                        scanner.nextLine();
-                        System.out.println("Error: Invalid input");
+                try {     // checks for valid units and units per timeslot
+                    System.out.print("Enter units: ");
+                    units = scanner.nextInt();
+                    System.out.print("Enter units per timeslot: ");
+                    unitsPerTimeslot = scanner.nextInt();
+                    scanner.nextLine();
+
+                    if (timeblockManager.getAvailableSlots().size() < units) {      // check if there are enough avaliable timeslots
+                        System.out.println("Error: Available timeslots not enough");
                         continue;
                     }
+                } catch (InputMismatchException e) {
+                    scanner.nextLine();
+                    System.out.println("Error: Invalid units");
+                    continue;
                 }
-                while(timeblockManager.getAvailableSlots().size() < units);
 
-                LocalTime duetime = LocalTime.parse(dueTime);
                 entryManager.getUnscheduledEntriesQueue().add(new UnscheduledEntry(taskName, dueTime, units, unitsPerTimeslot));
-
             } catch (DateTimeParseException e) {
                 scanner.nextLine();
-                System.out.println("Error: Invalid input");
+                System.out.println("Error: Invalid due time");
             }
         }
 
         UnscheduledEntryStrategy unscheduledEntryStrategy = new UnscheduledEntryStrategy();
         unscheduledEntryStrategy.scheduleUnscheduledEntries(entryManager.getUnscheduledEntriesQueue(), entryManager, timeblockManager);
 
-
         displayAllEntries(entryManager.getAllEntries());
-
+        scanner.close();
     }
 
     private static void displayAllEntries(TreeMap<Integer, CalendarEntry> allEntries) {
@@ -104,8 +112,7 @@ public class Calendar {
             String taskName = (floorEntry != null && floorEntry.getValue() != null) ? floorEntry.getValue().getName() : "N/A";
             String status = (floorEntry != null && floorEntry.getValue() != null) ? "Occupied" : "Available";
     
-            System.out.println("Time Slot " + i + " (" + timeBlock + "): " +
-                    status + " - Task: " + taskName);
+            System.out.println("Time Slot " + i + " (" + timeBlock + "): " + status + " - Task: " + taskName);
         }
     }
 }
