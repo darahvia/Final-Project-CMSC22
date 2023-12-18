@@ -14,7 +14,12 @@ public class UnscheduledEntryStrategy {
             UnscheduledEntry unscheduledEntry = unscheduledEntriesQueue.peek();
             System.out.println(entryManager.getUnscheduledEntriesQueue());
 
-            int timeslot = availableSlots.get(0) - 1;
+            int timeslot;
+            if (availableSlots.get(0) == 0) {
+                timeslot = availableSlots.get(0); 
+            } else {
+                timeslot = availableSlots.get(0) - 1;
+            }
             int unitsPerTimeslot = unscheduledEntry.getUnitsPerTimeslot();
             int unitsRemaining = unscheduledEntry.getUnitsRemaining();
 
