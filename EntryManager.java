@@ -2,7 +2,6 @@ import java.util.Queue;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.TreeMap;
 
 public class EntryManager{
@@ -27,7 +26,6 @@ public class EntryManager{
         int startSlot = calculateMinutes(startTime);
         int endSlot = calculateMinutes(endTime);
 
-
         allEntries.put(startSlot, new ScheduledEntry(taskName, startTime, endTime));
         allEntries.put(endSlot, null);
 
@@ -37,10 +35,7 @@ public class EntryManager{
         }
 
         timeblockManager.updateTimeslots(timeslotsToUpdate);
-
-
     }
-
 
     public int calculateMinutes (LocalTime time) {
         return time.getHour() * 4 + time.getMinute() / 15;  //returns the numeric value of the timeslot within 0 to 95
