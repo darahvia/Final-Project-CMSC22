@@ -54,7 +54,7 @@ public class Calendar {
             
             try {
                 System.out.print("Enter due time (HH:mm): ");
-                String dueTime = scanner.nextLine();
+                String dueTimeStr = scanner.nextLine();
 
                 int units = 0;
                 int unitsPerTimeslot = 0;
@@ -74,7 +74,7 @@ public class Calendar {
                 }
                 while(timeblockManager.getAvailableSlots().size() < units);
 
-                LocalTime duetime = LocalTime.parse(dueTime);
+                LocalTime dueTime = LocalTime.parse(dueTimeStr);
                 entryManager.getUnscheduledEntriesQueue().add(new UnscheduledEntry(taskName, dueTime, units, unitsPerTimeslot));
 
             } catch (DateTimeParseException e) {
@@ -88,6 +88,7 @@ public class Calendar {
 
 
         displayAllEntries(entryManager.getAllEntries());
+        scanner.close();
 
     }
 
