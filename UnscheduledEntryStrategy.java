@@ -2,6 +2,7 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Queue;
+import java.lang.Math;
 
 public class UnscheduledEntryStrategy {
     public void scheduleUnscheduledEntries(Queue<UnscheduledEntry> unscheduledEntriesQueue, EntryManager entryManager, TimeblockManager timeblockManager) {
@@ -9,44 +10,67 @@ public class UnscheduledEntryStrategy {
         int c = 0;
 
         while (!unscheduledEntriesQueue.isEmpty()){
-            c++;
-            System.out.println("iteration " + c);
+
             List<Integer> availableSlots = timeblockManager.getAvailableSlots();
-            UnscheduledEntry unscheduledEntry = unscheduledEntriesQueue.peek();
-            System.out.println(entryManager.getUnscheduledEntriesQueue());            
+            UnscheduledEntry unscheduledEntry = unscheduledEntriesQueue.peek();       
             int unitsPerTimeslot = unscheduledEntry.getUnitsPerTimeslot();
-            int timeslot = availableSlots.get(0) - 1;
+            int timeslot;
+            if (availableSlots.get(0) == 0){
+                timeslot = availableSlots.get(0);
+            } else {
+                timeslot = availableSlots.get(0) - 1;
+            }
+            
+
             int unitsRemaining = unscheduledEntry.getUnitsRemaining();
 
             if (unitsPerTimeslot >= unitsRemaining){          // last iteration
-                System.out.println(unscheduledEntry.getName() + " last iteration");
+
                 LocalTime startTime = calculateTime(timeslot);
                 LocalTime endTime = calculateTime(timeslot + unitsRemaining * 4);     //duration
-                entryManager.addScheduledEntry(startTime, endTime, unscheduledEntry.getName());             // add to the allEntries queue
 
                 int startSlot = calculateMinutes(startTime);                     // update occupied timeslots
                 int endSlot = calculateMinutes(endTime);
+                int endDueSlot = calculateMinutes(unscheduledEntry.getDueTime());
+                LocalTime endDueTime = unscheduledEntry.getDueTime();
+
+                if (endDueSlot <= endSlot){
+                    endSlot = endDueSlot;
+                    endTime = endDueTime;
+                }                
+                entryManager.addScheduledEntry(startTime, endTime, unscheduledEntry.getName());             // add to the allEntries queue
+
+                System.out.println("endDueSlot last" + endSlot);
                 ArrayList<Integer> timeslotsToUpdate = new ArrayList<>();
                 for (int i = startSlot; i <= endSlot; i++) {
-                    timeslotsToUpdate.add(i % timeblockManager.getTotalSlots());
+                        timeslotsToUpdate.add(i % timeblockManager.getTotalSlots());
                 }
+
                 timeblockManager.updateTimeslots(timeslotsToUpdate);              
                 System.out.println("removed" + unscheduledEntriesQueue.poll().getName());         // no units remaining, time to dequeue
 
                 continue;
 
             } else {
-                System.out.println(unscheduledEntry.getName());
-
                 LocalTime startTime = calculateTime(timeslot);
                 LocalTime endTime = calculateTime(timeslot + unitsPerTimeslot * 4);     //duration
-
                 int startSlot = calculateMinutes(startTime);                            // update occupied timeslots
                 int endSlot = calculateMinutes(endTime);
+                int endDueSlot = calculateMinutes(unscheduledEntry.getDueTime());
+                LocalTime endDueTime = unscheduledEntry.getDueTime();
+                System.out.println(endDueTime);
+                if (endDueSlot <= endSlot){
+                    endSlot = endDueSlot;
+                    endTime = endDueTime;
+                }
+               
+                System.out.println("endDueSlot" + endSlot);
+;
                 ArrayList<Integer> timeslotsToUpdate = new ArrayList<>();
                 for (int i = startSlot; i <= endSlot; i++) {
-                    timeslotsToUpdate.add(i % timeblockManager.getTotalSlots());
-                }
+                        timeslotsToUpdate.add(i % timeblockManager.getTotalSlots());
+                    }
+                
                 timeblockManager.updateTimeslots(timeslotsToUpdate);
 
                 entryManager.addScheduledEntry(startTime, endTime, unscheduledEntry.getName());
