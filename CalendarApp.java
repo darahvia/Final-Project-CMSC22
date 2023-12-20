@@ -217,15 +217,17 @@ public class CalendarApp extends JFrame {
             unitsPerTimeSlotField.setText("");
             dueTimeField.setText("");
             entryManager.getUnscheduledEntriesQueue().add(new UnscheduledEntry(taskName, dueTime, units, unitsPerTimeslot));
-            UnscheduledEntryStrategy unscheduledEntryStrategy = new UnscheduledEntryStrategy();
-            unscheduledEntryStrategy.scheduleUnscheduledEntries(entryManager.getUnscheduledEntriesQueue(), entryManager, timeblockManager);
+            
         } catch (java.time.format.DateTimeParseException | NumberFormatException e) {
             JOptionPane.showMessageDialog(this, "Error: Invalid input", "Error", JOptionPane.ERROR_MESSAGE);
         }
+    
     }
     
     
     private void displayAllEntries() {
+        UnscheduledEntryStrategy unscheduledEntryStrategy = new UnscheduledEntryStrategy();
+        unscheduledEntryStrategy.scheduleUnscheduledEntries(entryManager.getUnscheduledEntriesQueue(), entryManager, timeblockManager);
         TreeMap<Integer, CalendarEntry> allEntries = entryManager.getAllEntries();
         // Assuming MAX_TIME_SLOTS is a constant in your TimeblockManager class
         int maxTimeSlots = TimeblockManager.MAX_TIME_SLOTS;
