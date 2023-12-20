@@ -210,6 +210,8 @@ public class CalendarApp extends JFrame {
         } catch (java.time.format.DateTimeParseException | NumberFormatException e) {
             JOptionPane.showMessageDialog(this, "Error: Invalid input", "Error", JOptionPane.ERROR_MESSAGE);
         }
+        UnscheduledEntryStrategy unscheduledEntryStrategy = new UnscheduledEntryStrategy();
+        unscheduledEntryStrategy.scheduleUnscheduledEntries(entryManager.getUnscheduledEntriesQueue(), entryManager, timeblockManager);
         String entryDetails = String.format("Units: %s, Units per Time Slot: %s, Due Time: %s", unitsStr, unitsPerTimeSlotStr, dueTimeStr);
     }
 
