@@ -16,13 +16,7 @@ public class UnscheduledEntryStrategy {
             List<Integer> availableSlots = timeblockManager.getAvailableSlots();
             UnscheduledEntry unscheduledEntry = unscheduledEntriesQueue.peek();
 
-            int timeslot;
-            if (availableSlots.get(0) == 0) {
-                timeslot = availableSlots.get(0); 
-            } else {
-                timeslot = availableSlots.get(0) - 1;
-            }
-
+            int timeslot = availableSlots.get(0);
             int unitsPerTimeslot = unscheduledEntry.getUnitsPerTimeslot();
             int unitsRemaining = unscheduledEntry.getUnitsRemaining();
 
