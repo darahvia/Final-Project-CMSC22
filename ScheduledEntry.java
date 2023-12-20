@@ -2,6 +2,8 @@ import java.time.LocalTime;
 
 /**
  * represents the scheduled entry in a calendar
+ * @author Khean Maree C. Vallejera
+ * @author Darah Via D. Moscoso
  */
 public class ScheduledEntry extends CalendarEntry {
     private String name;

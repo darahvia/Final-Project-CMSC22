@@ -2,14 +2,16 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import java.time.LocalTime;
 import java.time.format.DateTimeParseException;
-import java.util.Map;
 import java.util.TreeMap;
 
+/**
+ * @author John Kyle N. Junsay (for the GUI)
+ * @author Darah Via D. Moscoso (for fixing the layout)
+ */
 public class CalendarApp extends JFrame {
     TimeblockManager timeblockManager = TimeblockManager.getInstance();     //singleton because it will be used for the unscheduled
     EntryManager entryManager = new EntryManager();
@@ -161,6 +163,10 @@ public class CalendarApp extends JFrame {
         });
     }
 
+    /**
+     * @author Christian Dale Celestial (for error catching of inputs)
+     * 
+     */
     private void addScheduledEntry() {
         String taskName = scheduledNameField.getText();
         String startTimeStr = startTimeField.getText();
@@ -195,6 +201,10 @@ public class CalendarApp extends JFrame {
         }
     } 
 
+    /**
+     * @author Christian Dale P. Celestial (for error catching of inputs)
+     * 
+     */
     private void addUnscheduledEntry() {
         String taskName = unscheduledNameField.getText();
         String unitsStr = unitsField.getText();
@@ -224,7 +234,10 @@ public class CalendarApp extends JFrame {
     
     }
     
-    
+    /**
+     * iterates all the entries in the allEntries TreeMap
+     * @author Darah Via D. Moscoso
+     */
     private void displayAllEntries() {
         UnscheduledEntryStrategy unscheduledEntryStrategy = new UnscheduledEntryStrategy();
         unscheduledEntryStrategy.scheduleUnscheduledEntries(entryManager.getUnscheduledEntriesQueue(), entryManager, timeblockManager);
@@ -260,6 +273,10 @@ public class CalendarApp extends JFrame {
         setCellColors();
     }
 
+    /**
+     * sets color for unempty timeblocks
+     * @author Darah Via D. Moscoso
+     */
     private void setCellColors() {
         DefaultTableCellRenderer renderer = new DefaultTableCellRenderer() {
             @Override

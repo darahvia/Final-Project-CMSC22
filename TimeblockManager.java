@@ -1,34 +1,39 @@
 import java.time.LocalTime;
 import java.util.*;
 
+/**
+ * manages time blocks and availability of time slots in a day
+ */
  class TimeblockManager {
     private static TimeblockManager instance = null;
     private TreeMap<Integer, String> allEntries;
 
+    /**
+     * private constructor to initialize the TimeblockManager instance
+     * @return
+     */
     public TimeblockManager() {
-        allEntries = new TreeMap<>();
+        allEntries = new TreeMap<>();   // maps time slots to corresponging entry names
     }
 
-    final static int MAX_TIME_SLOTS = 24 * 4; 
-    boolean[] occupiedTimeslots = new boolean[MAX_TIME_SLOTS];;
+    final static int MAX_TIME_SLOTS = 24 * 4;   // max number of time slots in a day (24 hours * 4 time slots per hour)
+    boolean[] occupiedTimeslots = new boolean[MAX_TIME_SLOTS];  // tracks occupation status of each timeslot
 
+    /**
+     * retrives singleton instance of TimeblockManager
+     * @return the TimeblockManager instance
+     */
     public static TimeblockManager getInstance() {
         if (instance == null){
             instance = new TimeblockManager();
         }
         return instance;
     }
-    public void addTimeBlock(LocalTime startTime, LocalTime endTime, String entryName) {
-        int startMinutes = startTime.getHour() * 4 + startTime.getMinute();
-        int endMinutes = endTime.getHour() * 4 + endTime.getMinute();
 
-        allEntries.put(startMinutes, entryName);
-        for (int i = startMinutes + 1; i < endMinutes; i++) {
-            allEntries.put(i, entryName);               // mark the time slots between start and end as occupied
-        }
-        allEntries.put(endMinutes, null);
-    }
-
+    /**
+     * 
+     * @param timeslotsToUpdate the list of time slots to be updated
+     */
     public void updateTimeslots(ArrayList<Integer> timeslotsToUpdate) {
         for (int timeslot : timeslotsToUpdate){
             occupiedTimeslots[timeslot] = true;
@@ -47,15 +52,6 @@ import java.util.*;
             }
         }
         return availableSlots;
-    }
-
-    public int getTotalSlots(){
-        return MAX_TIME_SLOTS;
-    }
-
-    public void displayOccupiedTimeslots() {
-        System.out.println("Occupied Time Slots:");
-        System.out.println(Arrays.toString(occupiedTimeslots));
     }
 
     public TreeMap<Integer, String> getAllEntries() {

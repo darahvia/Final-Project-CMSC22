@@ -4,6 +4,11 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.TreeMap;
 
+/**
+ * manages both the scheduled and unscheduled entries
+ * @author Darah Via D. Moscoso
+ * 
+ */
 public class EntryManager{
     private TreeMap<Integer, CalendarEntry> allEntries;
     private Queue<UnscheduledEntry> unscheduledEntriesQueue;

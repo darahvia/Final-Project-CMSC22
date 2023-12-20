@@ -2,6 +2,12 @@ import java.time.LocalTime;
 import java.util.List;
 import java.util.Queue;
 
+/**
+ * @author Darah Via D. Moscoso (for implementing the Round-robin-like scheduling algorithm)
+ * @author Christian Dale P. Salinas (for optimizing the code)
+ * 
+ */
+
 public class UnscheduledEntryStrategy {
 /**
  * schedules unscheduled entries based on the available time slots and units per timeslot
