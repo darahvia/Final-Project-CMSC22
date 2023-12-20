@@ -35,8 +35,13 @@ public class Calendar {
                     continue;
                 }
 
-                int startSlot = entryManager.calculateMinutes(startTime);
-                int endSlot = entryManager.calculateMinutes(endTime);
+                int startSlot = entryManager.calculateSlot(startTime);
+                int endSlot = entryManager.calculateSlot(endTime);
+
+                if (startSlot % 15 != 0 || endSlot % 15 != 0) {     // minutes should be in increments of 15
+                    System.out.println("Error: Invalid start/end time");
+                    continue;
+                }
 
                 if (timeblockManager.isTimeslotOccupied(startSlot) || timeblockManager.isTimeslotOccupied(endSlot)) {    // invalid input if timeslot is occupied
                     System.out.println("Error: Timeslots are occupied");
@@ -96,7 +101,7 @@ public class Calendar {
         unscheduledEntryStrategy.scheduleUnscheduledEntries(entryManager.getUnscheduledEntriesQueue(), entryManager, timeblockManager);
 
         displayAllEntries(entryManager.getAllEntries());
-
+        scanner.close();
     }
 
     private static void displayAllEntries(TreeMap<Integer, CalendarEntry> allEntries) {

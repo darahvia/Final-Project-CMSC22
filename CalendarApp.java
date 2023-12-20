@@ -174,8 +174,8 @@ public class CalendarApp extends JFrame {
                 return;
             }
 
-            int startSlot = entryManager.calculateMinutes(startTime);
-            int endSlot = entryManager.calculateMinutes(endTime);
+            int startSlot = entryManager.calculateSlot(startTime);
+            int endSlot = entryManager.calculateSlot(endTime);
 
             if (timeblockManager.isTimeslotOccupied(startSlot) || timeblockManager.isTimeslotOccupied(endSlot)) {    // invalid input if timeslot is occupied
                 JOptionPane.showMessageDialog(this, "Timeslots are occupied.", "Error", JOptionPane.ERROR_MESSAGE);
@@ -188,7 +188,6 @@ public class CalendarApp extends JFrame {
         } catch (DateTimeParseException e) {
             JOptionPane.showMessageDialog(this, "Error: Invalid Input", "Error", JOptionPane.ERROR_MESSAGE);
         }
-        String entryDetails = String.format("Start Time: %s, End Time: %s", startTimeStr, endTimeStr);
     }
 
     private void addUnscheduledEntry() {
@@ -212,7 +211,6 @@ public class CalendarApp extends JFrame {
         }
         UnscheduledEntryStrategy unscheduledEntryStrategy = new UnscheduledEntryStrategy();
         unscheduledEntryStrategy.scheduleUnscheduledEntries(entryManager.getUnscheduledEntriesQueue(), entryManager, timeblockManager);
-        String entryDetails = String.format("Units: %s, Units per Time Slot: %s, Due Time: %s", unitsStr, unitsPerTimeSlotStr, dueTimeStr);
     }
 
     
