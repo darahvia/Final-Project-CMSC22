@@ -4,6 +4,12 @@ import java.util.List;
 import java.util.Queue;
 
 public class UnscheduledEntryStrategy {
+/**
+ * schedules unscheduled entries based on the available time slots and units per timeslot
+ * @param unscheduledEntriesQueue   queue of unscheduled entries to be scheduled
+ * @param entryManager              entry manager containing scheduled and unscheduled entries
+ * @param timeblockManager          time block manager for managing the available time slots
+ */
     public void scheduleUnscheduledEntries(Queue<UnscheduledEntry> unscheduledEntriesQueue, EntryManager entryManager, TimeblockManager timeblockManager) {
         while (!unscheduledEntriesQueue.isEmpty()){
             List<Integer> availableSlots = timeblockManager.getAvailableSlots();
@@ -24,19 +30,12 @@ public class UnscheduledEntryStrategy {
             LocalTime startTime = calculateTime(timeslot);
             LocalTime endTime = lastIteration ? calculateTime(timeslot + unitsRemaining * 4) : calculateTime(timeslot + unitsPerTimeslot * 4);
 
-            int startSlot = calculateMinutes(startTime);                     // update occupied timeslots
-            int endSlot = calculateMinutes(endTime);
-            int endDueSlot = calculateMinutes(unscheduledEntry.getDueTime());
+            int endSlot = calculateSlot(endTime) - 1;            // para sa occupied slots
+            int endDueSlot = calculateSlot(unscheduledEntry.getDueTime());
             LocalTime endDueTime = unscheduledEntry.getDueTime();
             if (endDueSlot <= endSlot){ endSlot = endDueSlot; endTime = endDueTime;}  
             
             entryManager.addScheduledEntry(startTime, endTime, unscheduledEntry.getName());             // add to the allEntries queue
-
-            ArrayList<Integer> timeslotsToUpdate = new ArrayList<>();
-            for (int i = startSlot; i <= endSlot; i++) {
-                    timeslotsToUpdate.add(i % timeblockManager.getTotalSlots());
-            }
-            timeblockManager.updateTimeslots(timeslotsToUpdate);  
 
             if (lastIteration){          // last iteration
                 unscheduledEntriesQueue.poll().getName();         // no units remaining, time to dequeue
@@ -55,7 +54,7 @@ public class UnscheduledEntryStrategy {
         int minute = (timeslot % 4) * 15;
         return LocalTime.of(hour, minute);
     }
-    public int calculateMinutes (LocalTime time) {
+    public int calculateSlot (LocalTime time) {
         return time.getHour() * 4 + time.getMinute() / 15;  //returns the numeric value of the timeslot within 0 to 95
     }
 }
