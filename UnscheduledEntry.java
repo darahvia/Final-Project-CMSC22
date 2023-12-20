@@ -1,5 +1,5 @@
-
 import java.time.LocalTime;
+
 class UnscheduledEntry extends CalendarEntry {
     private String name;
     private LocalTime dueTime;
@@ -20,7 +20,6 @@ class UnscheduledEntry extends CalendarEntry {
     public String getName() {
         return name;
     }
-
 
     @Override
     public LocalTime getStartTime() {
@@ -50,6 +49,4 @@ class UnscheduledEntry extends CalendarEntry {
     public int getUnitsRemaining(){
         return unitsRemaining;
     }
-
-    
 }

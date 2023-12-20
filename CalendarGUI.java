@@ -84,35 +84,28 @@ public class CalendarGUI extends JFrame {
     }
 
     private void setCellColors() {
-            DefaultTableCellRenderer renderer = new DefaultTableCellRenderer() {
-                @Override
-                public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
-                    Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+        DefaultTableCellRenderer renderer = new DefaultTableCellRenderer() {
+            @Override
+            public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+                Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
 
-                    // Check if the cell represents an occupied time slot
-                    String status = table.getValueAt(row, 2).toString();
-                    if ("Occupied".equals(status)) {
-                        c.setBackground(Color.decode("#B0FC38")); // Set the color for occupied slots
-                        c.setForeground(Color.BLACK);
-                    } else {
-                        c.setBackground(table.getBackground());
-                        c.setForeground(table.getForeground());
-                    }
-
-                    return c;
+                // Check if the cell represents an occupied time slot
+                String status = table.getValueAt(row, 2).toString();
+                if ("Occupied".equals(status)) {
+                    c.setBackground(Color.decode("#B0FC38")); // Set the color for occupied slots
+                    c.setForeground(Color.BLACK);
+                } else {
+                    c.setBackground(table.getBackground());
+                    c.setForeground(table.getForeground());
                 }
-            };
 
-            for (int i = 0; i < entriesTable.getColumnCount(); i++) {
-                entriesTable.getColumnModel().getColumn(i).setCellRenderer(renderer);
+                return c;
             }
+        };
+
+        for (int i = 0; i < entriesTable.getColumnCount(); i++) {
+            entriesTable.getColumnModel().getColumn(i).setCellRenderer(renderer);
         }
-
-    private String calculateTime(int timeslot) {
-        int hour = timeslot / 4;
-        int minute = (timeslot % 4) * 15;
-
-        return String.format("%02d:%02d", hour, minute);
     }
 
     private void addScheduledEntry() {
@@ -140,9 +133,6 @@ public class CalendarGUI extends JFrame {
         }
     }
 
-
-
-
     private void addUnscheduledEntry() {
         // Prompt the user for unscheduled entry details
         String taskName = JOptionPane.showInputDialog("Enter Task Name for Unscheduled Entry:");
@@ -150,23 +140,21 @@ public class CalendarGUI extends JFrame {
         String unitsStr = JOptionPane.showInputDialog("Enter Number of Units for Unscheduled Entry:");
         String unitsPerSlotStr = JOptionPane.showInputDialog("Enter Units Per Slot for Unscheduled Entry:");
 
-    try {
-        // Correct import statement for LocalTime
-        java.time.LocalTime dueTime = java.time.LocalTime.parse(dueTimeStr);
-        int units = Integer.parseInt(unitsStr);
-        int unitsPerSlot = Integer.parseInt(unitsPerSlotStr);
+        try {
+            // Correct import statement for LocalTime
+            java.time.LocalTime dueTime = java.time.LocalTime.parse(dueTimeStr);
+            int units = Integer.parseInt(unitsStr);
+            int unitsPerSlot = Integer.parseInt(unitsPerSlotStr);
 
-        // Add to EntryManager
-        entryManager.getUnscheduledEntriesQueue().add(new UnscheduledEntry(taskName, dueTime, units, unitsPerSlot));
+            // Add to EntryManager
+            entryManager.getUnscheduledEntriesQueue().add(new UnscheduledEntry(taskName, dueTime, units, unitsPerSlot));
 
-        JOptionPane.showMessageDialog(this, "Unscheduled Entry Added Successfully", "Success", JOptionPane.INFORMATION_MESSAGE);
-
-    } catch (java.time.format.DateTimeParseException | NumberFormatException e) {
-        JOptionPane.showMessageDialog(this, "Error: Invalid input", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Unscheduled Entry Added Successfully", "Success", JOptionPane.INFORMATION_MESSAGE);
+        
+        } catch (java.time.format.DateTimeParseException | NumberFormatException e) {
+            JOptionPane.showMessageDialog(this, "Error: Invalid input", "Error", JOptionPane.ERROR_MESSAGE);
+        }
     }
-}
-
-
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
